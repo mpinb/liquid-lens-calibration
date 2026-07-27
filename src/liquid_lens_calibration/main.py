@@ -41,11 +41,7 @@ def _live_wait(focus_cam: XimeaFocusCamera) -> str:
             return "quit"
 
 
-_CALIB_DEFAULT = (
-    Path("calibration.xml")
-    if Path("calibration.xml").exists()
-    else Path("/home/nfc/braid-configs/calibration_charuco.xml")
-)
+_CALIB_DEFAULT = Path("/home/nfc/braid-configs/calibration_charuco.xml")
 
 # The Optotune driver is open-loop (no internal position feedback). Per
 # Optotune, commanding a new focal power faster than ~25 ms means the lens
@@ -96,7 +92,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--settle-ms",
         type=int,
-        default=100,
+        default=_MIN_SETTLE_MS,
         help=(
             f"Milliseconds to wait after setting diopter (default: %(default)s). "
             f"Must be >= {_MIN_SETTLE_MS} ms — the lens is open-loop and needs "
@@ -135,6 +131,11 @@ def parse_args() -> argparse.Namespace:
             f"time ({_MIN_SETTLE_MS} ms); the driver is open-loop, so faster "
             f"commands would measure the lens mid-transient and corrupt the "
             f"calibration."
+        )
+    if args.calibration == str(_CALIB_DEFAULT) and not _CALIB_DEFAULT.exists():
+        parser.error(
+            f"Default calibration file not found: {_CALIB_DEFAULT}\n"
+            f"Pass --calibration <path> to point at a different calibration XML."
         )
     return args
 
@@ -350,6 +351,13 @@ def _write_csv(dataset: list[dict]) -> None:
         writer.writeheader()
         writer.writerows(dataset)
     print(f"\nData saved to {csv_path}")
+
+    optofly_path = f"lens_calib_{timestamp_str}_optofly.csv"
+    with open(optofly_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["z", "dpt"])
+        writer.writerows((d["z"], d["diopter"]) for d in dataset)
+    print(f"OptoFly-compatible data saved to {optofly_path}")
     print("Done.")
 
 

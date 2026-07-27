@@ -57,13 +57,13 @@ uv run lens-calibrate [options]
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--calibration` | `/home/nfc/braid-configs/calibration_charuco.xml` | Braid multi-camera calibration XML |
+| `--calibration` | `/home/nfc/braid-configs/calibration_charuco.xml` | Braid multi-camera calibration XML. If the default doesn't exist and no `--calibration` is given, the tool errors out rather than silently proceeding |
 | `--port` | `/dev/optotune_ld` | Optotune lens serial port |
 | `--exposure` | `10000` | XIMEA exposure in µs |
 | `--coarse-steps` | `20` | Steps in the full-range diopter sweep |
 | `--fine-steps` | `40` | Steps in the narrow fine sweep per tag |
 | `--fine-repeats` | `1` | Repeats per fine-sweep direction (hi→lo / lo→hi), for hysteresis stats |
-| `--settle-ms` | `100` | Wait after each diopter change (ms). Minimum 25 ms — the lens driver is open-loop and needs that long to physically settle; lower values are rejected |
+| `--settle-ms` | `25` | Wait after each diopter change (ms). Minimum 25 ms — the lens driver is open-loop and needs that long to physically settle; lower values are rejected. Default is the fastest safe value |
 | `--z-thresh` | `0.02` | Max z-spread (m) to treat tags as coplanar |
 | `--tag-family` | `36h11` | AprilTag family (`36h11`, `25h9`, …) |
 | `--debug` | off | Save focus-curve plots and ROI crops to `./debug/` after each sweep |
@@ -104,14 +104,17 @@ auto-detected based on the spread of triangulated z values:
 
 ### Output
 
-CSV file: `lens_calib_YYYYMMDD_HHMMSS.csv`
+Two CSV files are written, sharing the same timestamp:
 
-Columns: `z, diopter, sweep_direction, x, y, n_cameras, n_tags, focus_metric_peak, timestamp`
+- `lens_calib_YYYYMMDD_HHMMSS.csv` — full data. Columns:
+  `z, diopter, sweep_direction, x, y, n_cameras, n_tags, focus_metric_peak, timestamp`.
+  Each measurement contributes two rows per tag — one per sweep direction
+  (`hi2lo` / `lo2hi`) — so the fit sees both branches of the hysteresis loop.
+- `lens_calib_YYYYMMDD_HHMMSS_optofly.csv` — just `z, dpt` (the `diopter`
+  column renamed), ready to point OptoFly's `liquid_lens.calibration_file`
+  at directly.
 
-Each measurement contributes two rows per tag — one per sweep direction
-(`hi2lo` / `lo2hi`) — so the fit sees both branches of the hysteresis loop.
-
-To interpolate diopter from `z` in real time, load the CSV and either
+To interpolate diopter from `z` in real time, load the full CSV and either
 re-fit the polynomial (or the vergence model, if the runtime range grows
 large enough for its curvature to matter) or use direct interpolation
 (e.g. `numpy.interp`).
