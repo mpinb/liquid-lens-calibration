@@ -339,11 +339,15 @@ def _fit_polynomial(z_vals: np.ndarray, d_vals: np.ndarray) -> None:
     print(f"  coefs (for np.polyval) = [{a:.6f}, {b:.6f}, {c:.6f}]")
 
 
+_LOCAL_CALIB_DIR = Path("calibrations")
+
+
 def _write_csv(dataset: list[dict]) -> None:
     if not dataset:
         return
     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    csv_path = f"lens_calib_{timestamp_str}.csv"
+    _LOCAL_CALIB_DIR.mkdir(parents=True, exist_ok=True)
+    csv_path = _LOCAL_CALIB_DIR / f"lens_calib_{timestamp_str}.csv"
     fieldnames = [
         "z", "diopter", "sweep_direction", "x", "y",
         "n_cameras", "n_tags", "focus_metric_peak", "timestamp",
@@ -361,7 +365,7 @@ def _write_csv(dataset: list[dict]) -> None:
             f"calibration? [y/N] "
         ).strip().lower()
         if answer not in ("y", "yes"):
-            optofly_path = Path(f"lens_calib_{timestamp_str}_optofly.csv")
+            optofly_path = _LOCAL_CALIB_DIR / f"lens_calib_{timestamp_str}_optofly.csv"
             print(f"Keeping existing file; saving new calibration to {optofly_path} instead")
 
     optofly_path.parent.mkdir(parents=True, exist_ok=True)

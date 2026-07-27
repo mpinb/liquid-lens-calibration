@@ -106,17 +106,17 @@ auto-detected based on the spread of triangulated z values:
 
 Two files are written:
 
-- `lens_calib_YYYYMMDD_HHMMSS.csv` (in the current directory) — full data.
-  Columns: `z, diopter, sweep_direction, x, y, n_cameras, n_tags,
-  focus_metric_peak, timestamp`. Each measurement contributes two rows per
-  tag — one per sweep direction (`hi2lo` / `lo2hi`) — so the fit sees both
-  branches of the hysteresis loop.
+- `calibrations/lens_calib_YYYYMMDD_HHMMSS.csv` (relative to the current
+  directory) — full data. Columns: `z, diopter, sweep_direction, x, y,
+  n_cameras, n_tags, focus_metric_peak, timestamp`. Each measurement
+  contributes two rows per tag — one per sweep direction (`hi2lo` / `lo2hi`)
+  — so the fit sees both branches of the hysteresis loop.
 - `/home/nfc/src/OptoFly/calibrations/liquid_lens.csv` — just `z, dpt` (the
   `diopter` column renamed), which is exactly where OptoFly's
   `liquid_lens.calibration_file` expects to find it. If that file already
   exists, you're prompted to confirm the overwrite; declining saves the new
-  calibration as `lens_calib_YYYYMMDD_HHMMSS_optofly.csv` in the current
-  directory instead, alongside the full CSV.
+  calibration as `calibrations/lens_calib_YYYYMMDD_HHMMSS_optofly.csv`
+  instead, alongside the full CSV.
 
 To interpolate diopter from `z` in real time, load the full CSV and either
 re-fit the polynomial (or the vergence model, if the runtime range grows
