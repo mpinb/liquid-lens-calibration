@@ -43,6 +43,8 @@ def _live_wait(focus_cam: XimeaFocusCamera) -> str:
 
 _CALIB_DEFAULT = Path("/home/nfc/braid-configs/calibration_charuco.xml")
 
+_OPTOFLY_CALIB_PATH = Path("/home/nfc/src/OptoFly/calibrations/liquid_lens.csv")
+
 # The Optotune driver is open-loop (no internal position feedback). Per
 # Optotune, commanding a new focal power faster than ~25 ms means the lens
 # hasn't finished settling from the previous command, so the frame grabbed
@@ -352,7 +354,17 @@ def _write_csv(dataset: list[dict]) -> None:
         writer.writerows(dataset)
     print(f"\nData saved to {csv_path}")
 
-    optofly_path = f"lens_calib_{timestamp_str}_optofly.csv"
+    optofly_path = _OPTOFLY_CALIB_PATH
+    if optofly_path.exists():
+        answer = input(
+            f"\n{optofly_path} already exists — replace it with this "
+            f"calibration? [y/N] "
+        ).strip().lower()
+        if answer not in ("y", "yes"):
+            optofly_path = Path(f"lens_calib_{timestamp_str}_optofly.csv")
+            print(f"Keeping existing file; saving new calibration to {optofly_path} instead")
+
+    optofly_path.parent.mkdir(parents=True, exist_ok=True)
     with open(optofly_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["z", "dpt"])
