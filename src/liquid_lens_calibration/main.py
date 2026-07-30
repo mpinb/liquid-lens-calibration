@@ -10,11 +10,13 @@ Usage::
 
 import argparse
 import csv
+import sys
 from datetime import datetime
 from pathlib import Path
 
 import cv2
 import numpy as np
+from optotune_lens import LensError
 
 from liquid_lens_calibration.calibration_io import parse_calibration_xml
 from liquid_lens_calibration.cameras import discover_basler_cameras, grab_frame, flush_buffers as flush_basler
@@ -65,7 +67,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--port",
         default="/dev/optotune_ld",
-        help="Serial port for the Optotune lens (default: %(default)s)",
+        help=(
+            "Serial port for the Optotune lens controller (default: %(default)s). "
+            "The controller model (Lens Driver 4 or ICC-1C) is auto-detected."
+        ),
     )
     parser.add_argument(
         "--exposure",
@@ -151,7 +156,11 @@ def main() -> None:
     basler_cameras = discover_basler_cameras(set(calibrations.keys()))
     print(f"Matched {len(basler_cameras)} Basler camera(s)")
 
-    lens, (d_min, d_max) = open_lens(args.port)
+    try:
+        lens, (d_min, d_max) = open_lens(args.port)
+    except LensError as e:
+        print(f"Could not open the Optotune lens controller: {e}", file=sys.stderr)
+        sys.exit(1)
     settle_s = args.settle_ms / 1000.0
     dataset: list[dict[str, float | int | str]] = []
 
