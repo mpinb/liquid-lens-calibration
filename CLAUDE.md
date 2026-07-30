@@ -215,3 +215,43 @@ aren't re-litigated or re-guessed by a future session:
    ROI selection is no longer interactive per the design above (see Focus
    camera section) — `--debug` mode's saved ROI crops are the practical way
    to sanity-check what's being measured.
+
+## Installing and Using Claude Code
+
+Claude Code is an AI-powered coding assistant that runs in your terminal.
+
+### Install
+
+Pick one:
+
+```bash
+# macOS, Linux, or WSL
+curl -fsSL https://claude.ai/install.sh | bash
+
+# npm (any platform, requires Node.js 22+)
+npm install -g @anthropic-ai/claude-code
+
+# Homebrew (macOS)
+brew install --cask claude-code
+```
+
+Windows PowerShell: `irm https://claude.ai/install.ps1 | iex`
+
+Verify: `claude --version` should print a version like `2.1.X (Claude Code)`.
+
+### First run
+
+```bash
+cd ~/src/liquid_lens_calibration
+claude
+```
+
+The first run opens a browser to authenticate (Claude Pro/Max, Team/Enterprise, Console, or an `ANTHROPIC_API_KEY` environment variable). Credentials are then stored locally — no repeat login.
+
+If this repo's `CLAUDE.md` is ever missing, running `/init` inside a Claude Code session regenerates it from the current codebase.
+
+### Useful commands
+
+- `/help` — list all commands
+- `/clear` — reset conversation history
+- Shift+Tab — cycle permission mode (`plan` / default / `acceptEdits`)
