@@ -9,10 +9,10 @@ description = "Build a z -> diopter lookup table for an Optotune liquid lens usi
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
-    { name = "Elhanan Buchsbaum", email = "ebuchsbaum@protonmail.com" },
+    { name = "Elhanan Buchsbaum", email = "elhanan.buchsbaum@mpinb.mpg.de" },
 ]
 maintainers = [
-    { name = "Elhanan Buchsbaum", email = "ebuchsbaum@protonmail.com" },
+    { name = "Elhanan Buchsbaum", email = "elhanan.buchsbaum@mpinb.mpg.de" },
 ]
 dependencies = [
     "numpy",
