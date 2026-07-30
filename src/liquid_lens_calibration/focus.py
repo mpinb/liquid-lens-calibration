@@ -276,7 +276,7 @@ def sweep_all_tags(
     tracked and focus metrics computed. Tags that are not detectable at a given
     diopter are still measured using their last known ROI.
 
-    **Fine pass** — for each tag, sweeps a narrow window (±2 coarse steps)
+    **Fine pass** — for each tag, sweeps a narrow window (±3 coarse steps)
     around its coarse peak in both directions (hi→lo then lo→hi) to capture
     hysteresis. Both per-direction peaks and their average are returned.
 
