@@ -12,6 +12,14 @@ LensDriver = Union[Lens, ICC1C]
 # given, since either — or neither, or both plugged in at once — may be true.
 _DEFAULT_PORTS = ("/dev/optotune_icc1c", "/dev/optotune_ld")
 
+# The ICC-1C's GETFPMIN/GETFPMAX replies are rounded slightly past what
+# SETFP itself will accept (e.g. GETFPMIN reports -3.602, but
+# SETFP=-3.602 is rejected as out-of-range while -3.601 is accepted) — a
+# firmware rounding mismatch between the read and write paths, confirmed
+# against real hardware. Pull the usable range in by this margin so a sweep
+# never commands the literal reported boundary.
+_ICC1C_RANGE_MARGIN = 0.01
+
 
 def _diopter_range(lens: LensDriver) -> tuple[float, float]:
     """Put `lens` in focal-power mode and return its (min, max) diopter range.
@@ -30,6 +38,8 @@ def _diopter_range(lens: LensDriver) -> tuple[float, float]:
             raise LensError(
                 "ICC-1C did not report a focal power range for the connected lens"
             )
+        d_min += _ICC1C_RANGE_MARGIN
+        d_max -= _ICC1C_RANGE_MARGIN
     else:
         # Lens Driver 4. If already in focal-power mode (e.g. not
         # power-cycled between runs), skip the mode-switch command to avoid

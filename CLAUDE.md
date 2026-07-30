@@ -76,8 +76,12 @@ plugin systems, no abstract base classes, no config frameworks.
   firmware error) and reads the range off `.min_diopter`/`.max_diopter`; for
   `ICC1C`, there's no mode concept — `to_focal_power_mode()` just validates
   the connected lens has EEPROM calibration data, and the range comes from
-  `get_diopter_min()`/`get_diopter_max()`. Temperature compensation and
-  diopter range otherwise come from the package itself.
+  `get_diopter_min()`/`get_diopter_max()` — pulled in by `_ICC1C_RANGE_MARGIN`
+  (0.01 D) before being returned, since on real hardware the ICC-1C's
+  `GETFPMIN`/`GETFPMAX` replies are rounded slightly past what `SETFP` itself
+  will accept (confirmed: `GETFPMIN` reported `-3.602`, but `SETFP=-3.602`
+  was rejected as out-of-range while `-3.601` was accepted). Temperature
+  compensation and diopter range otherwise come from the package itself.
   **The driver is open-loop** (no internal position feedback) — per Optotune,
   commanding a new diopter faster than ~25 ms doesn't let the lens finish
   settling, so a frame grabbed right after is measuring a transient, not the
