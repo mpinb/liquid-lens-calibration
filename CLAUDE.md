@@ -49,16 +49,27 @@ plugin systems, no abstract base classes, no config frameworks.
   (`/home/nfc/src/optotune-lens`, installed as a `uv` path dependency), which
   supports two controller models with incompatible wire protocols: the
   original **Lens Driver 4** (`Lens` class, binary protocol) and the newer
-  **ICC-1C** (`ICC1C` class, ASCII "Simple Mode" protocol). `lens.py`'s
-  `open_lens()` **auto-detects which one is on `--port`** — it tries
-  connecting as each class in turn (`_detect_driver`), and each class's
+  **ICC-1C** (`ICC1C` class, ASCII "Simple Mode" protocol). Both can be
+  physically connected at once on this rig, each behind its own fixed udev
+  symlink (`/etc/udev/rules.d/99-optotune*.rules`): `/dev/optotune_ld` for
+  the Driver 4, `/dev/optotune_icc1c` for the ICC-1C. `lens.py`'s
+  `open_lens()` **auto-detects both the controller model and the port** when
+  `--port` is omitted (the default) — it probes `_DEFAULT_PORTS`
+  (`/dev/optotune_icc1c` then `/dev/optotune_ld`), and on each port tries
+  connecting as each driver class in turn (`_try_connect`). Each class's
   `__init__` already performs its own handshake and raises `LensError` if the
   device on the other end doesn't answer as expected, so identification just
-  means catching that and trying the next class. If neither responds,
-  `open_lens` raises a combined `LensError` and `main.py` prints it and exits
-  (rather than a raw traceback). Whichever class is detected, both expose the
-  same `set_diopter()` used everywhere else in the tool, so nothing
-  downstream of `open_lens` needs to know which controller is connected.
+  means catching that and trying the next combination. A driver that
+  responds but reports a degenerate diopter range (min >= max — e.g. a Driver
+  4 box powered on with no lens head attached) is treated as not usable and
+  also skipped, since that produced a real false-positive detection during
+  testing. If nothing usable is found on any port, `open_lens` raises a
+  combined `LensError` and `main.py` prints it and exits (rather than a raw
+  traceback). Passing `--port` explicitly restricts detection to that one
+  port (still trying both driver classes on it). Whichever class is
+  detected, both expose the same `set_diopter()` used everywhere else in the
+  tool, so nothing downstream of `open_lens` needs to know which controller
+  is connected.
   Both are driven in **focal-power (diopter) mode**: for the `Lens` (Driver
   4), `lens.py` calls `lens.to_focal_power_mode()` unless already in that
   mode (skips the mode-switch to avoid a spurious "already in this mode"

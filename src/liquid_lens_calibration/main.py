@@ -3,7 +3,7 @@
 Usage::
 
     uv run python main.py [--exposure 10000] [--calibration <path>]
-                          [--port /dev/optotune_ld]
+                          [--port /dev/optotune_ld | /dev/optotune_icc1c]
                           [--coarse-steps 20] [--fine-steps 20]
                           [--z-thresh 0.02]
 """
@@ -66,10 +66,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--port",
-        default="/dev/optotune_ld",
+        default=None,
         help=(
-            "Serial port for the Optotune lens controller (default: %(default)s). "
-            "The controller model (Lens Driver 4 or ICC-1C) is auto-detected."
+            "Serial port for the Optotune lens controller. If omitted, both "
+            "the controller model (Lens Driver 4 or ICC-1C) and its port are "
+            "auto-detected."
         ),
     )
     parser.add_argument(
