@@ -373,10 +373,14 @@ def _write_csv(dataset: list[dict]) -> None:
     optofly_path = _OPTOFLY_CALIB_PATH
     if optofly_path.exists():
         answer = input(
-            f"\n{optofly_path} already exists — replace it with this "
-            f"calibration? [y/N] "
+            f"\n{optofly_path} already exists — back it up and replace it "
+            f"with this calibration? [Y/n] "
         ).strip().lower()
-        if answer not in ("y", "yes"):
+        if answer in ("", "y", "yes"):
+            backup_path = optofly_path.with_name(f"{optofly_path.name}.bak-{timestamp_str}")
+            optofly_path.rename(backup_path)
+            print(f"Backed up existing calibration to {backup_path}")
+        else:
             optofly_path = _LOCAL_CALIB_DIR / f"lens_calib_{timestamp_str}_optofly.csv"
             print(f"Keeping existing file; saving new calibration to {optofly_path} instead")
 

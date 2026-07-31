@@ -114,9 +114,12 @@ Two files are written:
 - `/home/nfc/src/OptoFly/calibrations/liquid_lens.csv` — just `z, dpt` (the
   `diopter` column renamed), which is exactly where OptoFly's
   `liquid_lens.calibration_file` expects to find it. If that file already
-  exists, you're prompted to confirm the overwrite; declining saves the new
-  calibration as `calibrations/lens_calib_YYYYMMDD_HHMMSS_optofly.csv`
-  instead, alongside the full CSV.
+  exists, you're prompted `replace it with this calibration? [Y/n]` —
+  defaults to yes, backing up the old file in place as
+  `liquid_lens.csv.bak-YYYYMMDD_HHMMSS` before writing the new one.
+  Declining instead saves the new calibration as
+  `calibrations/lens_calib_YYYYMMDD_HHMMSS_optofly.csv`, alongside the full
+  CSV, and leaves the existing `liquid_lens.csv` untouched.
 
 To interpolate diopter from `z` in real time, load the full CSV and either
 re-fit the polynomial (or the vergence model, if the runtime range grows
