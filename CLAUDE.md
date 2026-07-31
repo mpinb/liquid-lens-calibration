@@ -14,7 +14,7 @@ plugin systems, no abstract base classes, no config frameworks.
 ## What it does
 
 1. User places one or more AprilTag markers below the cameras and presses
-   Enter (in the live XIMEA preview window).
+   SPACE (in the live XIMEA preview window).
 2. Tool grabs images from all available Basler cameras (`pypylon`), detects
    every visible tag, and triangulates each tag's xyz using the precomputed
    multi-camera calibration.
@@ -134,7 +134,7 @@ measurement, whether the tags are coplanar (see below).
 
 ## Per-step procedure (`main.py` loop)
 
-1. Live XIMEA preview window; Enter = measure, Q/Esc = quit (keys read from
+1. Live XIMEA preview window; SPACE = measure, Q/Esc = quit (keys read from
    the OpenCV window, not the terminal).
 2. Flush stale buffers on all six Baslers and the XIMEA, grab one frame per
    Basler, detect + triangulate every visible tag.
@@ -160,7 +160,7 @@ measurement, whether the tags are coplanar (see below).
    hysteresis loop rather than an average-only point.
 7. `--debug` additionally saves a focus-curve plot and ROI crop per tag to
    `./debug/`.
-8. Prompt again: move the target(s), press Enter to measure, or Q to quit.
+8. Prompt again: move the target(s), press SPACE to measure, or Q to quit.
 
 ## Output
 

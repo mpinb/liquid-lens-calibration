@@ -39,11 +39,11 @@ To run a calibration session:
 
 1. Place an AprilTag (family `36h11`) somewhere in view of the Basler rig.
 2. Start the tool: `uv run lens-calibrate`.
-3. Press **Enter** in the preview window — it triangulates the tag, sweeps
+3. Press **SPACE** in the preview window — it triangulates the tag, sweeps
    the lens, and records the best-focus diopter for that position.
-4. Move the tag to a new distance and press **Enter** again. Repeat for
+4. Move the tag to a new distance and press **SPACE** again. Repeat for
    ~10–15 positions spanning the range you care about.
-5. Press **q** + Enter to quit. This fits the `z → diopter` curve and writes
+5. Press **Q** to quit. This fits the `z → diopter` curve and writes
    a timestamped CSV of every raw measurement.
 
 See [Procedure](#procedure) below for the full session walkthrough, and
@@ -77,19 +77,19 @@ auto-detected based on the spread of triangulated z values:
 
 **Single-height mode** — all tags within `--z-thresh` of each other:
 - Z values are fused (weighted by number of cameras per tag).
-- One `(z, diopter)` data point is recorded per press of Enter.
+- One `(z, diopter)` data point is recorded per press of SPACE.
 - Move the target to a new height and repeat (~10–15 positions for a good fit).
 
 **Multi-height mode** — tags span more than `--z-thresh` in z:
 - Each tag is triangulated and focused independently.
-- One `(z, diopter)` data point per tag per press of Enter.
+- One `(z, diopter)` data point per tag per press of SPACE.
 - Useful for a stacked multi-plane target: get N points in one interaction.
 
 ### Session walkthrough
 
 1. Place the target(s) below the cameras.
 2. Run `uv run lens-calibrate`.
-3. Press **Enter** to measure, or **q** + Enter to quit.
+3. Press **SPACE** to measure, or **Q** to quit.
    - The Basler rig triangulates all visible tags.
    - The lens performs a coarse sweep (full diopter range) while the XIMEA
      camera auto-detects tags and builds per-tag focus ROIs.
