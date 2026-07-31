@@ -29,15 +29,17 @@ from liquid_lens_calibration.lens import open_lens
 def _live_wait(focus_cam: XimeaFocusCamera) -> str:
     """Show a live XIMEA preview and wait for a keypress in the preview window.
 
-    Returns ``'measure'`` (Enter) or ``'quit'`` (Q / Escape).
+    Returns ``'measure'`` (SPACE) or ``'quit'`` (Q / Escape). SPACE is the
+    standard "record a point" key across all calibration tools in this
+    project's family (FOV, lens, ChArUco, heading calibration).
     The terminal prompt is printed once; subsequent interaction is via the window.
     """
-    print("  [preview window]  Enter = measure    Q = quit", flush=True)
+    print("  [preview window]  SPACE = measure    Q = quit", flush=True)
     while True:
         frame = focus_cam.grab_full_frame()
-        show_preview(frame, "Enter = measure    Q = quit")
+        show_preview(frame, "SPACE = measure    Q = quit")
         key = cv2.waitKey(30)
-        if key in (13, 10):        # Enter
+        if key == 32:               # Space
             return "measure"
         if key in (ord("q"), ord("Q"), 27):  # q / Q / Esc
             return "quit"
@@ -176,7 +178,7 @@ def main() -> None:
 
             print("\n" + "=" * 60)
             print("Calibration loop")
-            print("  Place AprilTag(s), then press Enter to measure.")
+            print("  Place AprilTag(s), then press SPACE to measure.")
             print("  Multiple tags at different heights → one data point each.")
             print("  Multiple tags at similar height → fused z, one data point.")
             print("  Keys are read from the preview window (click it first).")
