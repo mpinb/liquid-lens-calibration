@@ -1,4 +1,4 @@
-"""XIMEA focus camera control via ximea-py (xiAPI)."""
+"""XIMEA focus camera control via the mpinb/ximea-py fork (xiAPI)."""
 
 from ximea import xiapi
 
