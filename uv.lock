@@ -215,7 +215,7 @@ dependencies = [
     { name = "optotune-lens" },
     { name = "pypylon" },
     { name = "scipy" },
-    { name = "ximea-py" },
+    { name = "ximea" },
 ]
 
 [package.metadata]
@@ -226,7 +226,7 @@ requires-dist = [
     { name = "optotune-lens", directory = "/home/nfc/src/optotune-lens" },
     { name = "pypylon" },
     { name = "scipy" },
-    { name = "ximea-py" },
+    { name = "ximea", git = "https://github.com/mpinb/ximea-py.git" },
 ]
 
 [[package]]
@@ -549,10 +549,6 @@ wheels = [
 ]
 
 [[package]]
-name = "ximea-py"
-version = "4.27.13.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f4/26/ab2c7a44b467e31139b9b9d951902578beb3e3284ce737ff3d8572f3d7e6/ximea_py-4.27.13.3.tar.gz", hash = "sha256:40d81e361c823e469e1e8ba2e022874f7f66bfea99c1652d00d20a04063bca2e", size = 17090752, upload-time = "2025-02-26T16:40:14.766Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/46/4a69143dfd4e0dbe53f34cf5a5be170eb53d30fcd3cf07c5768b618f3ed5/ximea_py-4.27.13.3-py3-none-any.whl", hash = "sha256:f19b07dd9364bb5454bfda51fe0e5cc5642280ecc804714ec133ead8a9795d2c", size = 17287825, upload-time = "2025-02-26T16:40:04.107Z" },
-]
+name = "ximea"
+version = "4.33.14"
+source = { git = "https://github.com/mpinb/ximea-py.git#4388cf75a298599bedb621c9b8d6293ccf76fb2d" }

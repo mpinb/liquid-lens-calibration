@@ -20,7 +20,7 @@ dependencies = [
     "matplotlib",
     "opencv-contrib-python",
     "pypylon",
-    "ximea-py",
+    "ximea @ git+https://github.com/mpinb/ximea-py.git",
     "optotune-lens",
 ]
 
