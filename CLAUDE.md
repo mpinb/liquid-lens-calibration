@@ -95,8 +95,11 @@ plugin systems, no abstract base classes, no config frameworks.
   ICC-1C is supported.
 - **Focus camera:** a **separate** XIMEA CB160CG-LX-X8G3 sitting behind the
   liquid lens. This is the camera the focus metric is computed on — it is NOT
-  one of the six Basler triangulation cameras. Controlled via `ximea-py`
-  (standard xiAPI) in `focus_camera.py`:
+  one of the six Basler triangulation cameras. Controlled via the
+  [mpinb/ximea-py](https://github.com/mpinb/ximea-py) fork (xiAPI bindings,
+  pulled in as a `uv` git dependency named `ximea` — not the vanilla PyPI
+  `ximea-py` package, which lacks the fork's top-level `Camera`/`Image`
+  exports and auto sensor corrections) in `focus_camera.py`:
   - **Gain is hardcoded to 0.0** — not exposed as an option.
   - **Exposure is user-settable** via `--exposure` (default `10000` µs).
   - **Newest-frame guarantee:** `set_buffers_queue_size(2)` is attempted at
@@ -190,10 +193,10 @@ to use a blocking terminal `input()` here.
 `main.py` then fits **`D = a·z² + b·z + c`** (quadratic polynomial via
 `np.polyfit`) and prints the coefficients + residual RMS. This was found to
 fit as well as the theoretical vergence model over the short z ranges
-involved, and is simpler to invert (`np.polyval`). See `CONTEXT.md` for the
-original vergence-model (`D = a/(z - z0) + b`) rationale — that model can
-still be refit from the raw CSV if the runtime range grows large enough for
-its curvature to matter (e.g. via `scipy.optimize.curve_fit`).
+involved, and is simpler to invert (`np.polyval`). The original
+vergence-model (`D = a/(z - z0) + b`) can still be refit from the raw CSV if
+the runtime range grows large enough for its curvature to matter (e.g. via
+`scipy.optimize.curve_fit`).
 
 ## Module layout
 

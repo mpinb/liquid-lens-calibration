@@ -58,7 +58,7 @@ uv run lens-calibrate [options]
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--calibration` | `/home/nfc/braid-configs/calibration_charuco.xml` | Braid multi-camera calibration XML. If the default doesn't exist and no `--calibration` is given, the tool errors out rather than silently proceeding |
-| `--port` | `/dev/optotune_ld` | Optotune lens serial port |
+| `--port` | auto | Optotune lens controller serial port. Auto-detected by probing both `/dev/optotune_icc1c` and `/dev/optotune_ld` (each tried as both ICC-1C and Driver 4); set explicitly to restrict detection to one port |
 | `--exposure` | `10000` | XIMEA exposure in µs |
 | `--coarse-steps` | `20` | Steps in the full-range diopter sweep |
 | `--fine-steps` | `40` | Steps in the narrow fine sweep per tag |

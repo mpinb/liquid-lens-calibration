@@ -16,7 +16,7 @@ maintainers = [
 ]
 dependencies = [
     "numpy",
-    "scipy",
+
     "matplotlib",
     "opencv-contrib-python",
     "pypylon",
