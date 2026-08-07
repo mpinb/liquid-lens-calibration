@@ -184,9 +184,12 @@ which is exactly where OptoFly's `setup_lens_calibration`
 This path is intentionally independent of `_LOCAL_CALIB_DIR` — it's OptoFly's
 own calibrations folder, not this tool's local output folder, and the two
 happen to share a directory name by coincidence. If `_OPTOFLY_CALIB_PATH`
-already exists, `_write_csv` prompts on stdin before overwriting; declining
-falls back to writing `lens_calib_YYYYMMDD_HHMMSS_optofly.csv` under
-`_LOCAL_CALIB_DIR` instead, so no calibration run is ever silently lost.
+already exists, `_write_csv` prompts on stdin — `replace it with this
+calibration? [Y/n]`, defaulting to yes. Accepting backs up the existing file
+in place as `liquid_lens.csv.bak-YYYYMMDD_HHMMSS` before writing the new one;
+declining falls back to writing `lens_calib_YYYYMMDD_HHMMSS_optofly.csv`
+under `_LOCAL_CALIB_DIR` instead and leaves `_OPTOFLY_CALIB_PATH` untouched —
+so no calibration run is ever silently lost either way.
 This prompt runs after the cv2 preview windows are torn down, so it's safe
 to use a blocking terminal `input()` here.
 
